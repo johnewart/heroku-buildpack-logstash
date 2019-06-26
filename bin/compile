@@ -64,7 +64,11 @@ $mkdir ${INIT_SCRIPT%/*}
 $mkdir $CACHE_DIR
 CHECKSUM_URL="${DOWNLOAD_URL}.sha512"
 
-install_jdk 
+source <(curl -s --retry 3 -L $BUILDPACK_STDLIB_URL)
+
+export_env $ENV_DIR "." "JAVA_OPTS|JAVA_TOOL_OPTIONS"
+
+install_jdk "${BUILD_DIR}" "${CACHE_DIR}"
 
 if [ ! -f "$CACHE_DIR/$LOGSTASH_PACKAGE" ]; then
   echo "downloading $DOWNLOAD_URL" | indent
